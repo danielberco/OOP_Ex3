@@ -19,8 +19,17 @@ class TestNodeDS(TestCase):
         self.assertEqual(0, n1.get_key())
         self.assertEqual(1, n2.get_key())
 
-    # def test_get_weight(self):
-    #     self.fail()
+    def test_get_weight(self):
+        NodeDS.reset()
+        n1 = NodeDS()
+        self.assertEqual(-1, n1.get_weight(1))
+
+        n2id = 1
+        n1.add_neighbour(n2id, 5)
+        self.assertEqual(5, n1.get_weight(n2id))
+
+        n1.add_neighbour(n2id, 10)
+        self.assertEqual(5, n1.get_weight(n2id))
 
     def test_has_neighbour(self):
         NodeDS.reset()
@@ -56,5 +65,12 @@ class TestNodeDS(TestCase):
         self.assertEqual(True, n1.remove_neighbour(1))
         self.assertEqual(False, n1.remove_neighbour(1))
 
-    # def test_get_neighbours(self):
-    #     self.fail()
+    def test_get_neighbours(self):
+        NodeDS.reset()
+        n1 = NodeDS()
+        n2id = 1
+        n1.add_neighbour(n2id, 5)
+        self.assertEqual({n2id: n1.get_weight(n2id)}, n1.get_neighbours())
+
+        n1.remove_neighbour(n2id)
+        self.assertEqual({}, n1.get_neighbours())
