@@ -5,6 +5,11 @@ class NodeDS:
     def __init__(self):
         self.key = NodeDS.key_counter
         NodeDS.key_counter = NodeDS.key_counter + 1
+        self.neighbours = {}
+
+    @staticmethod
+    def reset() -> None:
+        NodeDS.key_counter = 0
 
     def get_key(self):
         return self.key
@@ -24,6 +29,8 @@ class NodeDS:
         return True
 
     def remove_neighbour(self, key: int) -> bool:
+        if key == self.get_key():
+            return False
         if not self.has_neighbour(key):
             return False
         del self.neighbours[key]
