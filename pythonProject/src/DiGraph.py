@@ -6,15 +6,21 @@ class DiGraph(GraphInterface.GraphInteface):
     nodes = {}  # key is int, value tuple of int and float
     node_obj = {}
     mc = 0
-    v_size = 0
     edge_size = 0
+
+    def __init__(self):
+        NodeDS.reset()
+        self.nodes = {}
+        self.node_obj = {}
+        self.mc = 0
+        self.edge_size = 0
 
     def v_size(self) -> int:
         # return self.v_size
         return len(self.nodes)
 
     def e_size(self) -> int:
-        return self.e_size
+        return self.edge_size
 
     def get_all_v(self) -> dict:  # key int value obj
         return self.node_obj
@@ -62,6 +68,8 @@ class DiGraph(GraphInterface.GraphInteface):
         if node_id1 not in self.nodes:
             return False
         if node_id2 not in self.nodes:
+            return False
+        if not self.node_obj[node_id1].has_neighbour(node_id2):
             return False
         self.node_obj[node_id1].remove_neighbour(node_id2)
         self.edge_size -= 1
