@@ -15,6 +15,18 @@ class DiGraph(GraphInterface.GraphInteface):
         self.mc = 0
         self.edge_size = 0
 
+    """
+    code from https://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes
+    """
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__dict__ == other.__dict__
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def v_size(self) -> int:
         # return self.v_size
         return len(self.nodes)
