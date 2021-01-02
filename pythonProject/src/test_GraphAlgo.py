@@ -13,8 +13,11 @@ class TestGraphAlgo(TestCase):
         ga.save_to_json("out_file.json")
         self.assertEqual(False, ga.load_from_json("out_file"))
         self.assertEqual(True, ga.load_from_json("out_file.json"))
+        self.assertEqual(True, g != DiGraph())
 
-        self.assertEqual(True, ga.g != DiGraph())
+        g2 = DiGraph()
+        g2.add_node(0)
+        self.assertEqual(True, g == g2)
 
     def test_save_to_json(self):
         g = DiGraph()
