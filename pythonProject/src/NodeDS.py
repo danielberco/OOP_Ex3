@@ -2,10 +2,20 @@ class NodeDS:
     neighbours = {}  # key is int, value is float
     key_counter = 0
 
-    def __init__(self):
-        self.key = NodeDS.key_counter
-        NodeDS.key_counter = NodeDS.key_counter + 1
-        self.neighbours = {}
+    def __init__(self, dict = {}):
+        if dict != {}:
+            self.key = dict["key"]
+            self.neighbours = dict["neighbours"]
+        else:
+            self.key = NodeDS.key_counter
+            NodeDS.key_counter = NodeDS.key_counter + 1
+            self.neighbours = {}
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__dict__ == other.__dict__
+        else:
+            return False
 
     @staticmethod
     def reset() -> None:
