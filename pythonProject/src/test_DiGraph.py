@@ -58,15 +58,16 @@ class TestDiGraph(TestCase):
         g.add_node(1)
         self.assertEqual(True, g.add_edge(0, 1, 5))
         self.assertEqual(False, g.add_edge(0, 1, 5))
+        self.assertEqual(False, g.add_edge(0, 0, 5))
 
         g.remove_edge(0, 1)
         self.assertEqual(True, g.add_edge(0, 1, 5))
 
     def test_add_node(self):
         """
-                This function tests the addition of a new node
-                :return:
-                """
+        This function tests the addition of a new node
+        :return:
+        """
 
         g = DiGraph()
         self.assertEqual(True, g.add_node(0))
