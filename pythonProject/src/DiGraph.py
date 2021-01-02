@@ -24,6 +24,9 @@ class DiGraph(GraphInterface.GraphInteface):
         else:
             return False
 
+    def nodeAsObj(self, other) -> bool:
+        return True in set(isinstance(v, NodeDS) for v in other.__dict__["node_obj"].values())
+
     def __ne__(self, other):
         return not self.__eq__(other)
 
