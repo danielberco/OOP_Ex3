@@ -17,13 +17,12 @@ GraphAlgoInterface | GraphAlgo
   methods for comparison between the libary `NetworkX` and our previous java libary.
   This class have several methods that finds the shortest path, by using Dijkstra's algorithem, and     checking the SCC between connected components algorithem.
   
+   
+  ![Image of Bank](https://www.baeldung.com/wp-content/uploads/2017/01/initial-graph.png)
   
-  * add picture of graph
-  
-  
-  _________________________________
   
 
+To see how we use each class , click  [Here](https://github.com/danielberco/OOP_Ex3/wiki) to see this project wiki page for more.
 
 ## Graph's libaries comarpisons :
 We comapred our interface with NetorkX libry and our previous java libary.
@@ -38,6 +37,7 @@ We comapred our interface with NetorkX libry and our previous java libary.
 [Elegant ways to support equivalence](https://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes)
 
 **Click [Here](https://github.com/danielberco/OOP_Ex3.git) to download this project.**
+
 
     
 
