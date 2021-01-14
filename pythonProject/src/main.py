@@ -1,8 +1,14 @@
 import sys
 # from DiGraph import DiGraph
 # from GraphAlgo import GraphAlgo
-from src import DiGraph, GraphAlgo
+import time
 
+import networkx as nx
+
+from src import GraphInterface
+from src.DiGraph import DiGraph
+from src.GraphAlgo import GraphAlgo
+from src.NodeDS import NodeDS
 
 def check():
     """
@@ -100,5 +106,36 @@ def check2():
     print(g_algo.connected_components())
     g_algo.plot_graph()
 
+def checkNetworkX(graph: GraphInterface):
+    G = nx.DiGraph()
+    for i in graph.get_all_v().keys():
+        G.add_node(i)
+    for src in graph.get_all_v().keys():
+        for dest, weight in graph.all_out_edges_of_node(src).items():
+            G.add_edge(src, dest, weight=weight)
+
+    start = time.time()
+    nx.strongly_connected_components(G)
+    final1 = time.time() - start
+    print("The time took for the Graph (NetworkX) with ", len(graph.get_all_v().keys()), "Nodes is: ",
+          final1, "for connected_components")
+    start = time.time()
+    nx.dijkstra_path(G=G, source=0, target=9)
+    final2 = time.time() - start
+    print("The time took for the Graph (NetworkX) with ", len(graph.get_all_v().keys()), "Nodes is: ",
+          final2, "for shortestPath")
+    return final1, final2
+
 if __name__ == '__main__':
-    check()
+    # check()
+    g = DiGraph()
+    w = 5
+    r = 10
+    for i in range(0, r):
+        g.add_node(i)
+    for i in range(0, r-1):
+        g.add_edge(i, i+1, w)
+    g.add_edge(0, 9, w*r+1)
+
+    # ga = GraphAlgo(g)
+    checkNetworkX(g)
