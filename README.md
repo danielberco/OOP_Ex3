@@ -18,7 +18,7 @@ GraphAlgoInterface | GraphAlgo
   This class have several methods that finds the shortest path, by using Dijkstra's algorithem, and     checking the SCC between connected components algorithem.
   
    
-  ![Image of Bank](https://www.baeldung.com/wp-content/uploads/2017/01/initial-graph.png)
+  ![Image](https://www.baeldung.com/wp-content/uploads/2017/01/initial-graph.png)
   
   
 
@@ -29,6 +29,10 @@ We comapred our interface with NetorkX libry and our previous java libary.
 
 
 
+
+
+![alt-text](graphs/Figure_1.png)
+______________________
 ## Resources :
 [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
 
