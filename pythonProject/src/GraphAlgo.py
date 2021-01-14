@@ -109,33 +109,37 @@ class GraphAlgo(GraphAlgoInterface):
         return l_ist
 
     def plot_graph(self) -> None:
-        plt.title(self.string)
-        x_vals = []
-        y_vals = []
         if len(self.graph.get_all_v()) == 0:
             return
 
-        for val in self.graph.nodes.values():
+        plt.title(self.string)
+        x_vals = []
+        y_vals = []
+        graph_nodes = {}
+        
+        for key in self.graph.nodes.keys():
+            val = self.graph.nodes[key]
             if val is None:
-                # xy.pos = (random.randrange(0, 100), random.randrange(0, 100), 0)
-                x_vals.append(random.randrange(0, 100))
-                y_vals.append(random.randrange(0, 100))
+                graph_nodes[key] = (random.randrange(0, 100), random.randrange(0, 100))
+                x_vals.append(graph_nodes[key][0])
+                y_vals.append(graph_nodes[key][1])
             else:
+                graph_nodes[key] = (val[0], val[1])
                 x_vals.append(val[0])
                 y_vals.append(val[1])
 
         plt.plot(x_vals, y_vals, 'o')
-        # for v in self.graph.node_obj.values():
-        #     v_x = float(v.pos[0])
-        #     v_y = float(v.pos[1])
-        #     plt.annotate(v.key, (v_x - 0.00015, v_y + 0.00015), color='red')
-        #     for e in self.graph.EdgesSrc[v.key].values():
-        #         x_e = float(self.graph.node_obj[e.dst].pos[0])
-        #         y_e = float(self.graph.node_obj[e.dst].pos[1])
-        #
-        #         plt.arrow(v_x, v_y, x_e - v_x, y_e - v_y, length_includes_head=True, head_width=0.0001991599,
-        #                   width=0.0000005, color='blue')
-
+        for key in graph_nodes.keys():
+            val = graph_nodes[key]
+            x_src = val[0]
+            y_src = val[1]
+            plt.annotate(key, (x_src - .5, y_src + .5), color='black')
+            for neighbour in self.graph.all_out_edges_of_node(key):
+                x_e = graph_nodes[neighbour][0]
+                y_e = graph_nodes[neighbour][1]
+                cmap = plt.cm.get_cmap("hsv", len(graph_nodes))
+                plt.arrow(x_src, y_src, x_e-x_src, y_e-y_src, length_includes_head=True, head_width=2,
+                          width=.0005, color=cmap(key))
         plt.show()
 
     def Dijkstra(self, src):
