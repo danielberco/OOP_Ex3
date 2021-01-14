@@ -2,10 +2,10 @@ class NodeDS:
     neighbours = {}  # key is int, value is float
     key_counter = 0
 
-    def __init__(self, dict = {}):
-        if dict != {}:
-            self.key = dict["key"]
-            self.neighbours = dict["neighbours"]
+    def __init__(self, dict_params={}):
+        if dict_params != {}:
+            self.key = dict_params["key"]
+            self.neighbours = dict_params["neighbours"]
         else:
             self.key = NodeDS.key_counter
             NodeDS.key_counter = NodeDS.key_counter + 1
