@@ -77,7 +77,7 @@ class GraphAlgo(GraphAlgoInterface):
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         if id1 not in self.graph.node_obj.keys() or id2 not in self.graph.node_obj.keys():
             return float('infinity'), []
-        self.Dijkstra(id1)
+        self.dijkstra(id1)
         ls = []
         if self.graph.node_obj.get(id2).tag == float('infinity'):
             return float('infinity'), ls
@@ -112,23 +112,23 @@ class GraphAlgo(GraphAlgoInterface):
         if len(self.graph.get_all_v()) == 0:
             return
 
-        plt.title(self.string)
-        x_vals = []
-        y_vals = []
+        plt.title("direction weighted graph V={} E={}".format(self.graph.v_size(), self.graph.e_size()))
+        x_val = []
+        y_val = []
         graph_nodes = {}
-        
+
         for key in self.graph.nodes.keys():
             val = self.graph.nodes[key]
             if val is None:
                 graph_nodes[key] = (random.randrange(0, 100), random.randrange(0, 100))
-                x_vals.append(graph_nodes[key][0])
-                y_vals.append(graph_nodes[key][1])
+                x_val.append(graph_nodes[key][0])
+                y_val.append(graph_nodes[key][1])
             else:
                 graph_nodes[key] = (val[0], val[1])
-                x_vals.append(val[0])
-                y_vals.append(val[1])
+                x_val.append(val[0])
+                y_val.append(val[1])
 
-        plt.plot(x_vals, y_vals, 'o')
+        plt.plot(x_val, y_val, 'o')
         for key in graph_nodes.keys():
             val = graph_nodes[key]
             x_src = val[0]
@@ -142,7 +142,7 @@ class GraphAlgo(GraphAlgoInterface):
                           width=.0005, color=cmap(key))
         plt.show()
 
-    def Dijkstra(self, src):
+    def dijkstra(self, src):
         for vertex in self.graph.node_obj.values():
             vertex.tag = float('infinity')
         self.graph.node_obj.get(src).tag = 0
@@ -150,16 +150,15 @@ class GraphAlgo(GraphAlgoInterface):
         visited = [src]
         while len(pq) > 0:
             node = pq.pop(0)
-            # for neighbor in self.graph.EdgesSrc[node.key].values():
-            for neighbor, n_weight in node.get_neighbours().values():
+            for neighbor in node.get_neighbours().keys():
+                n_weight = node.get_neighbours()[neighbor]
                 weight = node.tag + n_weight
-                if weight < self.graph.node_obj.get(neighbor.dst).tag:
-                    self.graph.node_obj.get(neighbor.dst).tag = weight
-                    self.graph.node_obj.get(neighbor.dst).r_from = node
-                    if neighbor.dst not in visited:
-                        pq.append(self.graph.node_obj.get(neighbor.dst))
-                        visited.append(neighbor.dst)
-
+                if weight < self.graph.node_obj.get(neighbor).tag:
+                    self.graph.node_obj.get(neighbor).tag = weight
+                    self.graph.node_obj.get(neighbor).r_from = node
+                    if neighbor not in visited:
+                        pq.append(self.graph.node_obj.get(neighbor))
+                        visited.append(neighbor)
         return
 
     def Kosaraju(self, src):
