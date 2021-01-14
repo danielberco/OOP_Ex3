@@ -97,7 +97,9 @@ class DiGraph(GraphInterface.GraphInteface):
         if node_id not in self.nodes:
             return False
         for val in self.node_obj.values():
-            val.remove_neighbour(node_id)
+            # val.remove_neighbour(node_id)
+            self.node_obj[val.get_key()].remove_neighbour(node_id)
+            self.edge_size -= 1
         return True
 
     def advance_mc(self):
