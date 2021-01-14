@@ -75,22 +75,22 @@ class GraphAlgo(GraphAlgoInterface):
         return True
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        if id1 not in self.graph.Nodes.keys() or id2 not in self.graph.Nodes.keys():
+        if id1 not in self.graph.node_obj.keys() or id2 not in self.graph.node_obj.keys():
             return float('infinity'), []
         self.Dijkstra(id1)
         ls = []
-        if self.graph.Nodes.get(id2).tag == float('infinity'):
+        if self.graph.node_obj.get(id2).tag == float('infinity'):
             return float('infinity'), ls
         form = id2
         ls.append(form)
         while id1 not in ls:
-            ls.append(self.graph.Nodes.get(form).r_from.key)
-            form = self.graph.Nodes.get(form).r_from.key
+            ls.append(self.graph.node_obj.get(form).r_from.key)
+            form = self.graph.node_obj.get(form).r_from.key
         ls.reverse()
-        return self.graph.Nodes.get(id2).tag, ls
+        return self.graph.node_obj.get(id2).tag, ls
 
     def connected_component(self, id1: int):
-        if id1 not in self.graph.Nodes.keys() or self.graph is None:
+        if id1 not in self.graph.node_obj.keys() or self.graph is None:
             return []
         l_ist = self.Kosaraju(id1)
         return l_ist
@@ -100,7 +100,7 @@ class GraphAlgo(GraphAlgoInterface):
             return []
         l_ist = []
         al_inScc = []
-        for i in self.graph.Nodes.values():
+        for i in self.graph.node_obj.values():
             if i.key not in al_inScc:
                 l = self.Kosaraju(i.key)
                 for k in l:
@@ -114,46 +114,46 @@ class GraphAlgo(GraphAlgoInterface):
         y_vals = []
         if len(self.graph.get_all_v()) == 0:
             return
-        for xy in self.graph.Nodes.values():
-            if xy.pos is None:
-                xy.pos = (random.randrange(0, 100), random.randrange(0, 100), 0)
-                x_vals.append(xy.pos[0])
-                y_vals.append(xy.pos[1])
+
+        for val in self.graph.nodes.values():
+            if val is None:
+                # xy.pos = (random.randrange(0, 100), random.randrange(0, 100), 0)
+                x_vals.append(random.randrange(0, 100))
+                y_vals.append(random.randrange(0, 100))
             else:
-                string = xy.pos.split(',')
-                xy.pos = tuple(string)
-                x_vals.append(float(string[0]))
-                y_vals.append(float(string[1]))
+                x_vals.append(val[0])
+                y_vals.append(val[1])
 
         plt.plot(x_vals, y_vals, 'o')
-        for v in self.graph.Nodes.values():
-            v_x = float(v.pos[0])
-            v_y = float(v.pos[1])
-            plt.annotate(v.key, (v_x - 0.00015, v_y + 0.00015), color='red')
-            for e in self.graph.EdgesSrc[v.key].values():
-                x_e = float(self.graph.Nodes[e.dst].pos[0])
-                y_e = float(self.graph.Nodes[e.dst].pos[1])
-
-                plt.arrow(v_x, v_y, x_e - v_x, y_e - v_y, length_includes_head=True, head_width=0.0001991599,
-                          width=0.0000005, color='blue')
+        # for v in self.graph.node_obj.values():
+        #     v_x = float(v.pos[0])
+        #     v_y = float(v.pos[1])
+        #     plt.annotate(v.key, (v_x - 0.00015, v_y + 0.00015), color='red')
+        #     for e in self.graph.EdgesSrc[v.key].values():
+        #         x_e = float(self.graph.node_obj[e.dst].pos[0])
+        #         y_e = float(self.graph.node_obj[e.dst].pos[1])
+        #
+        #         plt.arrow(v_x, v_y, x_e - v_x, y_e - v_y, length_includes_head=True, head_width=0.0001991599,
+        #                   width=0.0000005, color='blue')
 
         plt.show()
 
     def Dijkstra(self, src):
-        for vertex in self.graph.Nodes.values():
+        for vertex in self.graph.node_obj.values():
             vertex.tag = float('infinity')
-        self.graph.Nodes.get(src).tag = 0
-        pq = [self.graph.Nodes.get(src)]
+        self.graph.node_obj.get(src).tag = 0
+        pq = [self.graph.node_obj.get(src)]
         visited = [src]
         while len(pq) > 0:
             node = pq.pop(0)
-            for neighbor in self.graph.EdgesSrc[node.key].values():
-                weight = node.tag + neighbor.weight
-                if weight < self.graph.Nodes.get(neighbor.dst).tag:
-                    self.graph.Nodes.get(neighbor.dst).tag = weight
-                    self.graph.Nodes.get(neighbor.dst).r_from = node
+            # for neighbor in self.graph.EdgesSrc[node.key].values():
+            for neighbor, n_weight in node.get_neighbours().values():
+                weight = node.tag + n_weight
+                if weight < self.graph.node_obj.get(neighbor.dst).tag:
+                    self.graph.node_obj.get(neighbor.dst).tag = weight
+                    self.graph.node_obj.get(neighbor.dst).r_from = node
                     if neighbor.dst not in visited:
-                        pq.append(self.graph.Nodes.get(neighbor.dst))
+                        pq.append(self.graph.node_obj.get(neighbor.dst))
                         visited.append(neighbor.dst)
 
         return
@@ -164,7 +164,7 @@ class GraphAlgo(GraphAlgoInterface):
         while len(s) > 0:  # DFS Graph
             v = s.pop()
             if v not in visited.keys():
-                visited[v] = self.graph.Nodes[v]
+                visited[v] = self.graph.node_obj[v]
                 for edge in self.graph.EdgesSrc[v].values():
                     s.append(edge.dst)
         visited_2 = {}
@@ -172,7 +172,7 @@ class GraphAlgo(GraphAlgoInterface):
         while len(s_2) > 0:
             v = s_2.pop()
             if v not in visited_2.keys():
-                visited_2[v] = self.graph.Nodes[v]
+                visited_2[v] = self.graph.node_obj[v]
                 for edge in self.graph.EdgesDst[v].values():
                     s_2.append(edge.dst)
 
