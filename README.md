@@ -24,5 +24,20 @@ GraphAlgoInterface | GraphAlgo
   _________________________________
   
 
+
 ## Graph's libaries comarpisons :
 We comapred our interface with NetorkX libry and our previous java libary.
+
+
+
+## Resources :
+[Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
+
+[Kosaraju's algorithm](https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm)
+
+[Elegant ways to support equivalence](https://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes)
+
+**Click [Here](https://github.com/danielberco/OOP_Ex3.git) to download this project.**
+
+    
+
