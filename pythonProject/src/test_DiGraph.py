@@ -96,12 +96,16 @@ class TestDiGraph(TestCase):
         self.assertEqual(True, g.remove_edge(0, 1))
         self.assertEqual(False, g.remove_edge(0, 1))
 
-    # def test_remove_node_from_neighbours(self):
-    #     if node_id not in self.nodes:
-    #         return False
-    #     for val in self.node_obj.values():
-    #         val.remove_neighbour(node_id)
-    #     return True
+    def test_remove_node_from_neighbours(self):
+        g = DiGraph()
+        self.assertEqual(False, g.remove_node_from_neighbours(0))
+        g.add_node(0)
+        self.assertEqual(True, g.remove_node_from_neighbours(0))
+        g.add_node(1)
+        g.add_edge(0, 1, 5)
+        self.assertEqual(True, g.get_node(0).has_neighbour(1))
+        g.remove_node(0)
+        self.assertEqual(False, g.remove_node_from_neighbours(0))
 
     def test_advance_mc(self):
         g = DiGraph()
@@ -120,10 +124,6 @@ class TestDiGraph(TestCase):
         g.remove_edge(0, 1)
         self.assertEqual(4, g.mc)
 
-    # def test_advance_e(self):
-    #     self.edge_size += 1
-    #     self.advance_mc()
-
     def test_get_node(self):
         g = DiGraph()
         self.assertIsNone(g.get_node(0))
@@ -134,8 +134,7 @@ class TestDiGraph(TestCase):
         g.remove_node(0)
         self.assertIsNone(g.get_node(0))
 
-
-    def test_test_graph(self):
+    def test_graph(self):
         """
             This function tests the naming (main methods of the DiGraph class, as defined in GraphInterface.
             :return:
