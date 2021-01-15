@@ -34,22 +34,60 @@ class TestDiGraph(TestCase):
         g.remove_edge(0, 1)
         self.assertEqual(0, g.e_size())
 
-    # def test_get_all_v(self):
-    #     return self.node_obj
-    #
-    # def test_all_in_edges_of_node(self):
-    #     tmp = {}
-    #     for val in self.node_obj.values():
-    #         if val.has_neighbour(id1):
-    #             tmp[val.get_key()] = val.get_weight(id1)
-    #     return tmp
-    #
-    # def test_all_out_edges_of_node(self):
-    #     return self.node_obj[id1].get_neighbours()
-    #
-    # def test_get_mc(self):
-    #     return self.mc
-    #
+    def test_get_all_v(self):
+        g = DiGraph()
+        self.assertEqual({}, g.get_all_v())
+
+        g.add_node(0)
+        g.add_node(1)
+        g.add_node(2)
+        self.assertEqual(3, len(g.get_all_v()))
+
+        g.remove_node(2)
+        self.assertEqual(2, len(g.get_all_v()))
+
+    def test_all_in_edges_of_node(self):
+        g = DiGraph()
+        g.add_node(0)
+        g.add_node(1)
+        g.add_node(2)
+        self.assertEqual({}, g.all_in_edges_of_node(0))
+        g.add_edge(1, 0, 5)
+        g.add_edge(2, 0, 10)
+        g.add_edge(0, 1, 5)
+        self.assertEqual({1: 5, 2: 10}, g.all_in_edges_of_node(0))
+        g.remove_edge(1, 0)
+        self.assertEqual({2: 10}, g.all_in_edges_of_node(0))
+
+    def test_all_out_edges_of_node(self):
+        g = DiGraph()
+        g.add_node(0)
+        g.add_node(1)
+        g.add_node(2)
+        self.assertEqual({}, g.all_out_edges_of_node(0))
+        g.add_edge(1, 0, 2)
+        g.add_edge(0, 2, 10)
+        g.add_edge(0, 1, 5)
+        self.assertEqual({1: 5, 2: 10}, g.all_out_edges_of_node(0))
+        g.remove_edge(0, 1)
+        self.assertEqual({2: 10}, g.all_out_edges_of_node(0))
+
+    def test_get_mc(self):
+        g = DiGraph()
+        self.assertEqual(0, g.get_mc())
+        g.add_node(0)
+        self.assertEqual(1, g.get_mc())
+        g.add_node(1)
+        self.assertEqual(2, g.get_mc())
+        g.add_edge(0, 1, 5)
+        self.assertEqual(3, g.get_mc())
+        g.remove_node(0)
+        self.assertEqual(4, g.get_mc())
+        g.add_node(0)
+        g.add_edge(0, 1, 5)
+        g.remove_edge(0, 1)
+        self.assertEqual(7, g.get_mc())
+
     def test_add_edge(self):
         g = DiGraph()
         self.assertEqual(False, g.add_edge(0, 1, 5))
@@ -159,5 +197,3 @@ class TestDiGraph(TestCase):
         print(g.get_all_v())  # prints a dict with all the graph's vertices.
         print(g.all_in_edges_of_node(1))
         print(g.all_out_edges_of_node(1))
-        # g_algo = GraphAlgo(g)
-        # print(g_algo.shortest_path(0, 3))
