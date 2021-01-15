@@ -150,15 +150,18 @@ class GraphAlgo(GraphAlgoInterface):
         visited = [src]
         while len(pq) > 0:
             node = pq.pop(0)
-            for neighbor in node.get_neighbours().keys():
-                n_weight = node.get_neighbours()[neighbor]
-                weight = node.tag + n_weight
-                if weight < self.graph.node_obj.get(neighbor).tag:
-                    self.graph.node_obj.get(neighbor).tag = weight
-                    self.graph.node_obj.get(neighbor).r_from = node
-                    if neighbor not in visited:
-                        pq.append(self.graph.node_obj.get(neighbor))
-                        visited.append(neighbor)
+            try:
+                for neighbor in self.graph.all_out_edges_of_node(node.key).keys():
+                    n_weight = self.graph.all_out_edges_of_node(node.key)[neighbor]
+                    weight = node.tag + n_weight
+                    if weight < self.graph.node_obj[neighbor].tag:
+                        self.graph.node_obj[neighbor].tag = weight
+                        self.graph.node_obj[neighbor].r_from = node
+                        if neighbor not in visited:
+                            pq.append(self.graph.node_obj[neighbor])
+                            visited.append(neighbor)
+            except KeyError:
+                pass
         return
 
     def Kosaraju(self, src):
@@ -168,16 +171,16 @@ class GraphAlgo(GraphAlgoInterface):
             v = s.pop()
             if v not in visited.keys():
                 visited[v] = self.graph.node_obj[v]
-                for edge in self.graph.EdgesSrc[v].values():
-                    s.append(edge.dst)
+                for dst in self.graph.all_out_edges_of_node(v):#path_from_src[v].values():
+                    s.append(dst) #s.append(edge.dst)
         visited_2 = {}
         s_2 = [src]
         while len(s_2) > 0:
             v = s_2.pop()
             if v not in visited_2.keys():
                 visited_2[v] = self.graph.node_obj[v]
-                for edge in self.graph.EdgesDst[v].values():
-                    s_2.append(edge.dst)
+                for dst in self.graph.all_in_edges_of_node(v): #path_to_dst[v].values():
+                    s_2.append(dst)
 
         x = set(visited).intersection(visited_2)
         return list(x)
