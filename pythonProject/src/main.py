@@ -5,10 +5,10 @@ import time
 
 import networkx as nx
 
-from src import GraphInterface
-from src.DiGraph import DiGraph
-from src.GraphAlgo import GraphAlgo
-from src.NodeDS import NodeDS
+import GraphInterface
+from DiGraph import DiGraph
+from GraphAlgo import GraphAlgo
+from NodeDS import NodeDS
 
 def check():
     """
@@ -41,7 +41,7 @@ def check_add_node():
     This function tests the addition of a new node
     :return:
     """
-    from src.NodeDS import NodeDS
+    from NodeDS import NodeDS
     n1 = NodeDS()
     print(n1.get_key())
     n2 = NodeDS()
@@ -106,6 +106,25 @@ def check2():
     print(g_algo.connected_components())
     g_algo.plot_graph()
 
+def checkME(graph: GraphAlgo):
+    start = time.time()
+    graph.connected_components()
+    final1 = time.time() - start
+    print("The time took for the Graph (GraphInterface) with ", len(graph.get_graph().get_all_v().keys()), "Nodes is: ",
+          final1, "for connected_components")
+    start = time.time()
+    graph.shortest_path(0, 0)
+    final2 = time.time() - start
+    print("The time took for the Graph (GraphInterface) with ", len(graph.get_graph().get_all_v().keys()), "Nodes is: ",
+          final2, "for shortestPath")
+    start = time.time()
+    graph.connected_component(0)
+    final3 = time.time() - start
+    print("The time took for the Graph (GraphInterface) with ", len(graph.get_graph().get_all_v().keys()), "Nodes is: ",
+          final3, "for shortestPath")
+    return final1, final2, final3
+
+
 def checkNetworkX(graph: GraphInterface):
     G = nx.DiGraph()
     for i in graph.get_all_v().keys():
@@ -138,4 +157,5 @@ if __name__ == '__main__':
     g.add_edge(0, 9, w*r+1)
 
     # ga = GraphAlgo(g)
-    checkNetworkX(g)
+    netx1, netx2 = checkNetworkX(g)
+    # checkME(g)

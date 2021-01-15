@@ -1,6 +1,6 @@
 from unittest import TestCase
-from src.GraphAlgo import GraphAlgo
-from src.DiGraph import DiGraph
+from GraphAlgo import GraphAlgo
+from DiGraph import DiGraph
 
 
 class TestGraphAlgo(TestCase):

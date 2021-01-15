@@ -1,6 +1,6 @@
 from unittest import TestCase
-from src.NodeDS import NodeDS
-from src.DiGraph import DiGraph
+from NodeDS import NodeDS
+from DiGraph import DiGraph
 
 
 class TestDiGraph(TestCase):

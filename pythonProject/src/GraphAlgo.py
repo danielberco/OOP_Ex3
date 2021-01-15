@@ -1,10 +1,10 @@
 from typing import List
 import json
 from json import JSONEncoder
-from src import GraphInterface
-from src.DiGraph import DiGraph
-from src.GraphAlgoInterface import GraphAlgoInterface
-from src.NodeDS import NodeDS
+import GraphInterface
+from DiGraph import DiGraph
+from GraphAlgoInterface import GraphAlgoInterface
+from NodeDS import NodeDS
 
 import heapq
 import queue
