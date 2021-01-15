@@ -1,5 +1,5 @@
 from unittest import TestCase
-from src.NodeDS import NodeDS
+from NodeDS import NodeDS
 
 
 class TestNodeDS(TestCase):
