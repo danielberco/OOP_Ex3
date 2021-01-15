@@ -4,8 +4,11 @@ class NodeDS:
 
     def __init__(self, dict_params={}):
         if dict_params != {}:
+            tmp_dict = {}
+            for k in dict_params["neighbours"].keys():
+                tmp_dict[ord(k) - 48] = dict_params["neighbours"][k]
+            self.neighbours = tmp_dict
             self.key = dict_params["key"]
-            self.neighbours = dict_params["neighbours"]
         else:
             self.key = NodeDS.key_counter
             NodeDS.key_counter = NodeDS.key_counter + 1
