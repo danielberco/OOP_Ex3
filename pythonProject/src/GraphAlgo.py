@@ -4,14 +4,7 @@ from json import JSONEncoder
 import GraphInterface
 from DiGraph import DiGraph
 from GraphAlgoInterface import GraphAlgoInterface
-from NodeDS import NodeDS
-
-import heapq
-import queue
-import math
-import numpy as np
 import matplotlib.pyplot as plt
-import random
 
 
 class MyEncoder(JSONEncoder):
@@ -29,6 +22,10 @@ class GraphAlgo(GraphAlgoInterface):
         return self.graph
 
     def load_from_json(self, file_name: str) -> bool:
+        """
+        code from type conversion
+        https://www.tutorialspoint.com/convert-a-list-into-a-tuple-in-python
+        """
         if not self.is_json_file(file_name):
             return False
         try:
@@ -36,38 +33,11 @@ class GraphAlgo(GraphAlgoInterface):
                 self.json = json.load(out)
         except FileNotFoundError:
             return False
-        # if 'Edges' in self.json.keys():
-        #     pass
-            # edges = self.json['Edges']
-            # nodes = self.json['Nodes']
-            # nodes_moded = {}
-            # edges_moded = {}
-            # for line in nodes:
-            #     nodes_moded[line['id']] = (* line['pos'].split(',')[:2], )
-            # self.get_graph().__dict__['nodes'] = nodes_moded
-            # for line in edges:
-            #     tmp = {}
-            #     tmp['key'] = line['src']
-            #     tmp['']
-            #     edges_moded[line['src']] = tmp
-            #     "1": {"key": 1, "neighbours": {"2": 5}, "tag": 5, "r_from": {"key": 0, "neighbours": {"9": 51, "1": 5, "8": 1}, "tag": 0}}
-        # else:
         self.get_graph().__dict__.update(self.json)
-        # self.change_key_to_int("node_obj", create_obj=True)
-        # self.change_key_to_int("nodes")
+        if len(self.get_graph().__dict__['Nodes']) > 0:
+            for x in self.get_graph().__dict__['Nodes']:
+                x['pos'] = (*x['pos'],)
         return True
-
-    def change_key_to_int(self, dict_name, create_obj=False) -> None:
-        sub_dict = self.get_graph().__dict__[dict_name]
-        tmp_dict = {}
-        for k in sub_dict.keys():
-            if create_obj:
-                tmp_dict[ord(k) - 48] = NodeDS(self.get_graph().__dict__[dict_name][k])
-            else:
-                tmp_dict[ord(k) - 48] = sub_dict[k]
-        del sub_dict
-        self.get_graph().__dict__[dict_name] = {}
-        self.get_graph().__dict__[dict_name].update(tmp_dict)
 
     def save_to_json(self, file_name: str) -> bool:
         """
@@ -103,8 +73,6 @@ class GraphAlgo(GraphAlgoInterface):
         stack = [src_node]
         prev = {}
 
-        # for node_key in self.graph.nodes:
-        #     self.graph.nodes.get(node_key).tag = -1
         src_node['tag'] = 0
         while len(stack) > 0:
             node = stack.pop(0)
@@ -137,7 +105,7 @@ class GraphAlgo(GraphAlgoInterface):
             temp_key = prev[temp_key]
         path.append(id1)
         path.reverse()
-        return self.graph.get_dict(taged_nodes, 'id', id1)['tag'], path
+        return self.graph.get_dict(taged_nodes, 'id', id2)['tag'], path
 
     def connected_component(self, id1: int):
         node_dict = self.graph.get_dict(self.graph.Nodes, 'id', id1)

@@ -9,15 +9,15 @@ class TestGraphAlgo(TestCase):
         ga = GraphAlgo(g)
         self.assertEqual(True, ga.get_graph() == DiGraph())
 
-        ga.get_graph().add_node(0)
+        ga.get_graph().add_node(0, (10, 20))
         ga.save_to_json("out_file.json")
         self.assertEqual(False, ga.load_from_json("out_file"))
-        # self.assertEqual(True, ga.load_from_json("out_file.json"))
-        # self.assertEqual(True, g != DiGraph())
+        self.assertEqual(True, ga.load_from_json("out_file.json"))
+        self.assertEqual(True, g != DiGraph())
 
-        # g2 = DiGraph()
-        # g2.add_node(0)
-        # self.assertEqual(True, g == g2)
+        g2 = DiGraph()
+        g2.add_node(0, (10, 20))
+        self.assertEqual(True, g == g2)
         self.assertEqual(True, ga.load_from_json("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_20000_160000_1.json"))
 
     def test_save_to_json(self):
