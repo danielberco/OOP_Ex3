@@ -123,6 +123,15 @@ class TestDiGraph(TestCase):
         self.assertEqual(True, g.remove_node(0))
         self.assertEqual(False, g.remove_node(0))
 
+        g.add_node(0)
+        g.add_node(1)
+        g.add_node(2)
+        g.add_edge(0, 1, 5)
+        g.add_edge(2, 0, 5)
+        self.assertEqual(True, g.remove_node(0))
+        self.assertEqual(False, g.has_edge(0, 1))
+        self.assertEqual(False, g.has_edge(2, 0))
+
     def test_remove_edge(self):
         g = DiGraph()
         self.assertEqual(False, g.remove_edge(0, 1))

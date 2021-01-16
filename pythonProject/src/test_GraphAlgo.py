@@ -12,12 +12,13 @@ class TestGraphAlgo(TestCase):
         ga.get_graph().add_node(0)
         ga.save_to_json("out_file.json")
         self.assertEqual(False, ga.load_from_json("out_file"))
-        self.assertEqual(True, ga.load_from_json("out_file.json"))
-        self.assertEqual(True, g != DiGraph())
+        # self.assertEqual(True, ga.load_from_json("out_file.json"))
+        # self.assertEqual(True, g != DiGraph())
 
-        g2 = DiGraph()
-        g2.add_node(0)
-        self.assertEqual(True, g == g2)
+        # g2 = DiGraph()
+        # g2.add_node(0)
+        # self.assertEqual(True, g == g2)
+        self.assertEqual(True, ga.load_from_json("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_20000_160000_1.json"))
 
     def test_save_to_json(self):
         g = DiGraph()
@@ -55,6 +56,7 @@ class TestGraphAlgo(TestCase):
         g.add_edge(0, 8, 1)
         length, path = ga.shortest_path(0, 9)
         self.assertEqual(w+1, length)
+        # ga.save_to_json("gg.json")
 
     def test_connected_component(self):
         """
@@ -66,19 +68,23 @@ class TestGraphAlgo(TestCase):
         i = 0
 
         for x in self.list_graph[0].get_all_v().values():
-            str = "i = {} , {} -> {} == {}".format(i, x.get_key(), self.list_algo[0].connected_component(x.get_key()),
-                                                   my_list[0])
             if i < 7:
-                self.assertEqual(my_list[0], self.list_algo[0].connected_component(x.get_key()))
+                self.assertEqual(my_list[0], self.list_algo[0].connected_component(x['id']))
             if i == 7:
-                self.assertEqual(my_list[1], self.list_algo[0].connected_component(x.get_key()))
+                self.assertEqual(my_list[1], self.list_algo[0].connected_component(x['id']))
 
             if i == 8:
-                self.assertEqual(my_list[2], self.list_algo[0].connected_component(x.get_key()))
+                self.assertEqual(my_list[2], self.list_algo[0].connected_component(x['id']))
             i += 1
 
     def test_connected_components(self):
-        return NotImplemented
+        """
+                run by func2 and check the connected_components of the graph.
+                This functions tests the connected_components function for the class DiGraph
+                """
+        self.func2()
+        my_list = [[0, 1, 2, 3, 4, 5, 6], [8], [9]]
+        self.assertEqual(my_list, self.list_algo[0].connected_components())
 
     def test_plot_graph(self):
         g = DiGraph()
@@ -108,8 +114,8 @@ class TestGraphAlgo(TestCase):
         for x in range(7):
             graph.add_node(x)
         for x in graph.get_all_v().values(): #.get_all_values():
-            graph.add_edge(x.get_key(), x.get_key() + 1, x.get_key() + 1)
-            graph.add_edge(x.get_key(), x.get_key() - 1, x.get_key() + 1)
+            graph.add_edge(x['id'], x['id'] + 1, x['id'] + 1)
+            graph.add_edge(x['id'], x['id'] - 1, x['id'] + 1)
 
         graph.add_node(8)
         graph.add_node(9)

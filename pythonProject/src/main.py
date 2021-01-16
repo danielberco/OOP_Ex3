@@ -5,6 +5,7 @@ import time
 
 import networkx as nx
 import matplotlib.pyplot as plt
+from random import random
 import GraphInterface
 from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
@@ -121,7 +122,7 @@ def checkME(graph: GraphAlgo):
     graph.connected_component(0)
     final3 = time.time() - start
     print("The time took for the Graph (GraphInterface) with ", len(graph.get_graph().get_all_v().keys()), "Nodes is: ",
-          final3, "for shortestPath")
+          final3, "for connected_component")
     return final1, final2, final3
 
 
@@ -145,54 +146,33 @@ def checkNetworkX(graph: GraphInterface):
           final2, "for shortestPath")
     return final1, final2
 
+
+def create_graph(nodes: int, edges: int):
+    g = DiGraph()
+    for n in range(nodes):
+        g.add_node(n)
+    for i in range(edges):
+        g.add_edge(int(random()*nodes), int(random()*nodes), random()*nodes)
+    g.add_edge(0, 9 , nodes*edges) #for tests
+    return g
+
+
+def compare_times(graph: str):
+    g.load_from_json(graph)
+    v = checkNetworkX(g.get_graph())
+    w = checkME(g)
+    return v, w
+
+
 if __name__ == '__main__':
-    # check()
-    gg = DiGraph()
-    w = 5
-    r = 10
-    for i in range(0, r):
-        gg.add_node(i)
-    for i in range(0, r-1):
-        gg.add_edge(i, i+1, w)
-    gg.add_edge(0, 9, w*r+1)
-
-    ga = GraphAlgo(gg)
-    ga.save_to_json("tmp.json")
-    # netx1, netx2 = checkNetworkX(g)
-    # checkME(ga)
-
-    # **check 10/80
     g = GraphAlgo(DiGraph())
-    # g.load_from_json("tmp.json")
-    g.load_from_json("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_10_80_1.json")
-    v1 = checkNetworkX(g.get_graph())
-    w1 = checkME(g)
-    # g.plot_graph()
-    # **check 100/800
-    g.load_from_json("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_100_800_1.json")
-    v2 = checkNetworkX(g.get_graph())
-    w2 = checkME(g)
-    # g.plot_graph()
-    # **check 1000/8000
-    g.load_from_json("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_1000_8000_1.json")
-    v3 = checkNetworkX(g.get_graph())
-    w3 = checkME(g)
-    # g.plot_graph()
-    # **check 10000/80000
-    g.load_from_json("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_10000_80000_1.json")
-    v4 = checkNetworkX(g.get_graph())
-    w4 = checkME(g)
-    # g.plot_graph()
-    # **check 20000/16000
-    g.load_from_json("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_20000_160000_1.json")
-    v5 = checkNetworkX(g.get_graph())
-    w5 = checkME(g)
-    # g.plot_graph()
-    # **check 30000/240000
-    g.load_from_json("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_30000_240000_1.json")
-    v6 = checkNetworkX(g.get_graph())
-    w6 = checkME(g)
-    # g.plot_graph()
+    v1, w1 = compare_times("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_10_80_1.json")
+    v2, w2 = compare_times("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_100_800_1.json")
+    v3, w3 = compare_times("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_1000_8000_1.json")
+    v4, w4 = compare_times("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_10000_80000_1.json")
+    v5, w5 = compare_times("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_20000_160000_1.json")
+    v6, w6 = compare_times("C:/Users/mthee/repos/OOP_Ex3/Graphs_on_circle/G_30000_240000_1.json")
+
     listV0 = [v1[0], v2[0], v3[0], v4[0], v5[0], v6[0]]
     listofNodes = [10, 100, 1000, 10000, 20000, 30000]
     listV1 = [v1[1], v2[1], v3[1], v4[1], v5[1], v6[1]]
@@ -208,7 +188,7 @@ if __name__ == '__main__':
     plt.xlabel("Nodes")
     plt.ylabel("time (in seconds)")
     plt.title("Connected Components")
-    plt.legend
+    plt.legend()
     plt.show()
     plt.plot(listofNodes, listW1, "r")
     plt.plot(listofNodes, listV1)

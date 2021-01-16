@@ -36,9 +36,25 @@ class GraphAlgo(GraphAlgoInterface):
                 self.json = json.load(out)
         except FileNotFoundError:
             return False
+        # if 'Edges' in self.json.keys():
+        #     pass
+            # edges = self.json['Edges']
+            # nodes = self.json['Nodes']
+            # nodes_moded = {}
+            # edges_moded = {}
+            # for line in nodes:
+            #     nodes_moded[line['id']] = (* line['pos'].split(',')[:2], )
+            # self.get_graph().__dict__['nodes'] = nodes_moded
+            # for line in edges:
+            #     tmp = {}
+            #     tmp['key'] = line['src']
+            #     tmp['']
+            #     edges_moded[line['src']] = tmp
+            #     "1": {"key": 1, "neighbours": {"2": 5}, "tag": 5, "r_from": {"key": 0, "neighbours": {"9": 51, "1": 5, "8": 1}, "tag": 0}}
+        # else:
         self.get_graph().__dict__.update(self.json)
-        self.change_key_to_int("node_obj", create_obj=True)
-        self.change_key_to_int("nodes")
+        # self.change_key_to_int("node_obj", create_obj=True)
+        # self.change_key_to_int("nodes")
         return True
 
     def change_key_to_int(self, dict_name, create_obj=False) -> None:
@@ -75,22 +91,57 @@ class GraphAlgo(GraphAlgoInterface):
         return True
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        if id1 not in self.graph.node_obj.keys() or id2 not in self.graph.node_obj.keys():
-            return float('infinity'), []
-        self.dijkstra(id1)
-        ls = []
-        if self.graph.node_obj.get(id2).tag == float('infinity'):
-            return float('infinity'), ls
-        form = id2
-        ls.append(form)
-        while id1 not in ls:
-            ls.append(self.graph.node_obj.get(form).r_from.key)
-            form = self.graph.node_obj.get(form).r_from.key
-        ls.reverse()
-        return self.graph.node_obj.get(id2).tag, ls
+        node_dict1 = self.graph.get_dict(self.graph.Nodes, 'id', id1)
+        node_dict2 = self.graph.get_dict(self.graph.Nodes, 'id', id2)
+        if node_dict1 is None or node_dict2 is None:
+            return float('inf'), None
+        taged_nodes = []
+        for node in self.graph.Nodes:
+            taged_nodes.append({'id': node['id'], 'tag': -1})
+
+        src_node = self.graph.get_dict(taged_nodes, 'id', id1)
+        stack = [src_node]
+        prev = {}
+
+        # for node_key in self.graph.nodes:
+        #     self.graph.nodes.get(node_key).tag = -1
+        src_node['tag'] = 0
+        while len(stack) > 0:
+            node = stack.pop(0)
+            for neighbor in self.graph.all_out_edges_of_node(node['id']).keys():
+                neighbor_dict = self.graph.get_dict(taged_nodes, 'id', neighbor)
+                edge_weight = self.graph.all_out_edges_of_node(node['id'])[neighbor]
+                if neighbor_dict['tag'] == -1:
+                    taged_nodes.remove(neighbor_dict)
+                    neighbor_dict['tag'] = node['tag'] + edge_weight
+                    taged_nodes.append(neighbor_dict)
+                    prev[neighbor] = node['id']
+                    stack.append(neighbor_dict)
+                    stack.sort(key=lambda x: x['tag'], reverse=False)
+                else:
+                    if neighbor_dict['tag'] > node['tag'] + edge_weight:
+                        taged_nodes.remove(neighbor_dict)
+                        neighbor_dict['tag'] = node['tag'] + edge_weight
+                        taged_nodes.append(neighbor_dict)
+                        prev[neighbor] = node['id']
+                        if neighbor_dict in stack:
+                            stack.remove(neighbor_dict)
+                        stack.append(neighbor_dict)
+                        stack.sort(key=lambda x: x['tag'], reverse=False)
+        if id2 not in prev:
+            return None
+        path = [id2]
+        temp_key = id2
+        while prev[temp_key] != id1:
+            path.append(prev[temp_key])
+            temp_key = prev[temp_key]
+        path.append(id1)
+        path.reverse()
+        return self.graph.get_dict(taged_nodes, 'id', id1)['tag'], path
 
     def connected_component(self, id1: int):
-        if id1 not in self.graph.node_obj.keys() or self.graph is None:
+        node_dict = self.graph.get_dict(self.graph.Nodes, 'id', id1)
+        if node_dict is None:
             return []
         l_ist = self.Kosaraju(id1)
         return l_ist
@@ -100,9 +151,9 @@ class GraphAlgo(GraphAlgoInterface):
             return []
         l_ist = []
         al_inScc = []
-        for i in self.graph.node_obj.values():
-            if i.key not in al_inScc:
-                l = self.Kosaraju(i.key)
+        for i in self.graph.Nodes:#.values():
+            if i['id'] not in al_inScc:
+                l = self.Kosaraju(i['id'])
                 for k in l:
                     al_inScc.append(k)
                 l_ist.append(l)
@@ -117,16 +168,11 @@ class GraphAlgo(GraphAlgoInterface):
         y_val = []
         graph_nodes = {}
 
-        for key in self.graph.nodes.keys():
-            val = self.graph.nodes[key]
-            if val is None:
-                graph_nodes[key] = (random.randrange(0, 100), random.randrange(0, 100))
-                x_val.append(graph_nodes[key][0])
-                y_val.append(graph_nodes[key][1])
-            else:
-                graph_nodes[key] = (val[0], val[1])
-                x_val.append(val[0])
-                y_val.append(val[1])
+        for node in self.graph.Nodes:
+            pos = node['pos']
+            graph_nodes[node['id']] = (pos[0], pos[1])
+            x_val.append(pos[0])
+            y_val.append(pos[1])
 
         plt.plot(x_val, y_val, 'o')
         for key in graph_nodes.keys():
@@ -142,45 +188,24 @@ class GraphAlgo(GraphAlgoInterface):
                           width=.0005, color=cmap(key))
         plt.show()
 
-    def dijkstra(self, src):
-        for vertex in self.graph.node_obj.values():
-            vertex.tag = float('infinity')
-        self.graph.node_obj.get(src).tag = 0
-        pq = [self.graph.node_obj.get(src)]
-        visited = [src]
-        while len(pq) > 0:
-            node = pq.pop(0)
-            try:
-                for neighbor in self.graph.all_out_edges_of_node(node.key).keys():
-                    n_weight = self.graph.all_out_edges_of_node(node.key)[neighbor]
-                    weight = node.tag + n_weight
-                    if weight < self.graph.node_obj[neighbor].tag:
-                        self.graph.node_obj[neighbor].tag = weight
-                        self.graph.node_obj[neighbor].r_from = node
-                        if neighbor not in visited:
-                            pq.append(self.graph.node_obj[neighbor])
-                            visited.append(neighbor)
-            except KeyError:
-                pass
-        return
-
     def Kosaraju(self, src):
         s = [src]
         visited = {}
         while len(s) > 0:  # DFS Graph
             v = s.pop()
             if v not in visited.keys():
-                visited[v] = self.graph.node_obj[v]
-                for dst in self.graph.all_out_edges_of_node(v):#path_from_src[v].values():
-                    s.append(dst) #s.append(edge.dst)
+                node_dict = self.graph.get_dict(self.graph.Nodes, 'id', v)
+                visited[v] = node_dict
+                for edge in self.graph.all_out_edges_of_node(v).keys():
+                    s.append(edge)
         visited_2 = {}
         s_2 = [src]
         while len(s_2) > 0:
             v = s_2.pop()
             if v not in visited_2.keys():
-                visited_2[v] = self.graph.node_obj[v]
-                for dst in self.graph.all_in_edges_of_node(v): #path_to_dst[v].values():
-                    s_2.append(dst)
+                visited_2[v] = self.graph.get_dict(self.graph.Nodes, 'id', v)
+                for edge in self.graph.all_in_edges_of_node(v).keys():
+                    s_2.append(edge)
 
         x = set(visited).intersection(visited_2)
         return list(x)
