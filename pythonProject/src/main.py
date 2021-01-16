@@ -9,7 +9,6 @@ from random import random
 import GraphInterface
 from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
-from NodeDS import NodeDS
 
 def check():
     """
@@ -42,7 +41,6 @@ def check_add_node():
     This function tests the addition of a new node
     :return:
     """
-    from NodeDS import NodeDS
     n1 = NodeDS()
     print(n1.get_key())
     n2 = NodeDS()
