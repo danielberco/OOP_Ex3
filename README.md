@@ -25,10 +25,17 @@ GraphAlgoInterface | GraphAlgo
 To see how we use each class , click  [Here](https://github.com/danielberco/OOP_Ex3/wiki) to see this project wiki page for more.
 
 ## Graph's libaries comarpisons :
-We comapred our interface with NetWorkX libry and our previous java libary.
+We comapred our interface with NetWorkX libry and our previous java libary , in all `GraphAlgo` algorithems :
+
+![alt-text](graphs/ShortestPath.jpeg)
 
 
 
+
+![alt-text](graphs/connected_components.png)
+
+
+![alt-text](graphs/connected_component.png)
 
 
 ![alt-text](graphs/Figure_1.png)
