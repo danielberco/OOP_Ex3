@@ -1,24 +1,14 @@
 import random
 from typing import List
-
 import GraphInterface
-from NodeDS import NodeDS
 
 
 class DiGraph(GraphInterface.GraphInteface):
-    # nodes = {}  # key is int, value tuple of int and float
-    # node_obj = {}
-    # mc = 0
-    # edge_size = 0
 
     def __init__(self):
-        # NodeDS.reset()
-        # self.nodes = {}
-        # self.node_obj = {}
         self.Edges = []
         self.Nodes = []
         self.mc = 0
-        # self.edge_size = 0
 
     """
     code from https://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes
@@ -47,19 +37,14 @@ class DiGraph(GraphInterface.GraphInteface):
         return {node['id']: node for node in self.Nodes}
         # return self.Nodes  # {id, pos}
 
-    def all_in_edges_of_node(self, id1: int) -> dict:  # key int value float
+    def all_in_edges_of_node(self, id1: int) -> dict:
         tmp = {}
         for edge in self.Edges:
             if edge['dest'] == id1:
                 tmp.update({edge['src']: edge['w']})
         return tmp
-        # for val in self.node_obj.values():
-        #     if val.has_neighbour(id1):
-        #         tmp[val.get_key()] = val.get_weight(id1)
-        # return tmp
 
-    def all_out_edges_of_node(self, id1: int) -> dict:  # key int value float
-        # return self.node_obj[id1].get_neighbours()
+    def all_out_edges_of_node(self, id1: int) -> dict:
         tmp = {}
         for edge in self.Edges:
             if edge['src'] == id1:
@@ -119,18 +104,19 @@ class DiGraph(GraphInterface.GraphInteface):
         node_dict = self.get_dict(self.Nodes, 'id', node_id)
         if node_dict is None:
             return False
-        # while
-        # for val in self.node_obj.values():
-        #     # val.remove_neighbour(node_id)
-        #     self.node_obj[val.get_key()].remove_neighbour(node_id)
-        #     self.edge_size -= 1
+        to_remove = []
+        for edge in self.Edges:
+            if edge['src'] == node_id or edge['dest'] == node_id:
+                to_remove.append(edge)
+        for edge in to_remove:
+            self.Edges.remove(edge)
         return True
 
     def advance_mc(self):
         self.mc += 1
 
-    def get_node(self, node_id: int) -> NodeDS:
-        return self.get_dict(self.Nodes, node_id)
+    # def get_node(self, node_id: int) -> NodeDS:
+    #     return self.get_dict(self.Nodes, 'id', node_id)
 
     @staticmethod
     def get_dict(list_name: List, key: str, val: int, key2=None, val2=None):

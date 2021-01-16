@@ -1,5 +1,4 @@
 from unittest import TestCase
-from NodeDS import NodeDS
 from DiGraph import DiGraph
 
 
@@ -150,7 +149,6 @@ class TestDiGraph(TestCase):
         self.assertEqual(True, g.remove_node_from_neighbours(0))
         g.add_node(1)
         g.add_edge(0, 1, 5)
-        self.assertEqual(True, g.get_node(0).has_neighbour(1))
         g.remove_node(0)
         self.assertEqual(False, g.remove_node_from_neighbours(0))
 
@@ -170,39 +168,3 @@ class TestDiGraph(TestCase):
         g.remove_edge(0, 1)
         g.remove_edge(0, 1)
         self.assertEqual(4, g.mc)
-
-    def test_get_node(self):
-        g = DiGraph()
-        self.assertIsNone(g.get_node(0))
-
-        g.add_node(0)
-        self.assertIsNotNone(g.get_node(0))
-
-        g.remove_node(0)
-        self.assertIsNone(g.get_node(0))
-
-    def test_graph(self):
-        """
-            This function tests the naming (main methods of the DiGraph class, as defined in GraphInterface.
-            :return:
-            """
-        g = DiGraph()  # creates an empty directed graph
-        size = 4
-        for n in range(size):
-            g.add_node(n)
-        self.assertEqual(size, g.v_size())
-        self.assertIsNone(g.get_node(size))
-        g.add_edge(0, 1, 1)
-        self.assertEqual(False, g.add_edge(0, 1, 1))
-        self.assertEqual(False, g.add_edge(0, 1, 2))
-        g.add_edge(1, 0, 1.1)
-        g.add_edge(1, 2, 1.3)
-        g.add_edge(2, 3, 1.1)
-        g.add_edge(1, 3, 1.9)
-        g.remove_edge(1, 3)
-
-        g.add_edge(1, 3, 10)
-        print(g)  # prints the __repr__ (func output)
-        print(g.get_all_v())  # prints a dict with all the graph's vertices.
-        print(g.all_in_edges_of_node(1))
-        print(g.all_out_edges_of_node(1))
